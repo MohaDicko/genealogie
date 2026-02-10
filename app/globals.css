@@ -3,82 +3,76 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* New warm, heritage-inspired color palette for Mémoire Familiale */
+/* Premium Sahel-Inspired Palette */
 :root {
   --background: oklch(0.98 0.01 85);
-  --foreground: oklch(0.25 0.02 50);
-  --card: oklch(0.99 0.005 85);
-  --card-foreground: oklch(0.25 0.02 50);
-  --popover: oklch(0.99 0.005 85);
-  --popover-foreground: oklch(0.25 0.02 50);
-  --primary: oklch(0.45 0.12 145);
+  --foreground: oklch(0.20 0.04 40);
+
+  --card: oklch(1 0.005 85 / 0.8);
+  --card-foreground: oklch(0.20 0.04 40);
+
+  --popover: oklch(0.99 0.01 85);
+  --popover-foreground: oklch(0.20 0.04 40);
+
+  /* Rich Savannah Green */
+  --primary: oklch(0.48 0.14 145);
   --primary-foreground: oklch(0.98 0.01 85);
-  --secondary: oklch(0.94 0.02 85);
-  --secondary-foreground: oklch(0.35 0.05 50);
-  --muted: oklch(0.95 0.015 85);
-  --muted-foreground: oklch(0.5 0.02 50);
-  --accent: oklch(0.75 0.12 55);
-  --accent-foreground: oklch(0.25 0.02 50);
-  --destructive: oklch(0.55 0.2 25);
+
+  /* Warm Earthy Tones */
+  --secondary: oklch(0.94 0.03 80);
+  --secondary-foreground: oklch(0.30 0.06 40);
+
+  --muted: oklch(0.94 0.02 85);
+  --muted-foreground: oklch(0.45 0.04 40);
+
+  /* Desert Gold Accent */
+  --accent: oklch(0.72 0.16 70);
+  --accent-foreground: oklch(0.20 0.05 40);
+
+  --destructive: oklch(0.50 0.22 25);
   --destructive-foreground: oklch(0.98 0.01 85);
-  --border: oklch(0.88 0.02 85);
-  --input: oklch(0.92 0.015 85);
-  --ring: oklch(0.45 0.12 145);
-  --chart-1: oklch(0.45 0.12 145);
-  --chart-2: oklch(0.65 0.15 55);
-  --chart-3: oklch(0.55 0.1 200);
-  --chart-4: oklch(0.7 0.1 30);
-  --chart-5: oklch(0.5 0.08 280);
-  --radius: 0.75rem;
-  --sidebar: oklch(0.97 0.01 85);
-  --sidebar-foreground: oklch(0.25 0.02 50);
-  --sidebar-primary: oklch(0.45 0.12 145);
-  --sidebar-primary-foreground: oklch(0.98 0.01 85);
-  --sidebar-accent: oklch(0.94 0.02 85);
-  --sidebar-accent-foreground: oklch(0.35 0.05 50);
-  --sidebar-border: oklch(0.88 0.02 85);
-  --sidebar-ring: oklch(0.45 0.12 145);
+
+  --border: oklch(0.85 0.03 85);
+  --input: oklch(0.90 0.02 85);
+  --ring: oklch(0.48 0.14 145);
+
+  --chart-1: oklch(0.48 0.14 145);
+  --chart-2: oklch(0.68 0.18 70);
+  --chart-3: oklch(0.52 0.12 210);
+  --chart-4: oklch(0.65 0.15 40);
+  --chart-5: oklch(0.48 0.10 290);
+
+  --radius: 1rem;
 }
 
 .dark {
-  --background: oklch(0.18 0.02 50);
-  --foreground: oklch(0.95 0.01 85);
-  --card: oklch(0.22 0.02 50);
-  --card-foreground: oklch(0.95 0.01 85);
-  --popover: oklch(0.22 0.02 50);
-  --popover-foreground: oklch(0.95 0.01 85);
-  --primary: oklch(0.55 0.12 145);
-  --primary-foreground: oklch(0.15 0.02 50);
-  --secondary: oklch(0.28 0.02 50);
-  --secondary-foreground: oklch(0.95 0.01 85);
-  --muted: oklch(0.28 0.02 50);
-  --muted-foreground: oklch(0.7 0.02 85);
-  --accent: oklch(0.65 0.12 55);
-  --accent-foreground: oklch(0.15 0.02 50);
-  --destructive: oklch(0.45 0.18 25);
-  --destructive-foreground: oklch(0.95 0.01 85);
-  --border: oklch(0.32 0.02 50);
-  --input: oklch(0.28 0.02 50);
-  --ring: oklch(0.55 0.12 145);
-  --chart-1: oklch(0.55 0.12 145);
-  --chart-2: oklch(0.7 0.15 55);
-  --chart-3: oklch(0.6 0.1 200);
-  --chart-4: oklch(0.75 0.1 30);
-  --chart-5: oklch(0.55 0.08 280);
-  --sidebar: oklch(0.22 0.02 50);
-  --sidebar-foreground: oklch(0.95 0.01 85);
-  --sidebar-primary: oklch(0.55 0.12 145);
-  --sidebar-primary-foreground: oklch(0.15 0.02 50);
-  --sidebar-accent: oklch(0.28 0.02 50);
-  --sidebar-accent-foreground: oklch(0.95 0.01 85);
-  --sidebar-border: oklch(0.32 0.02 50);
-  --sidebar-ring: oklch(0.55 0.12 145);
+  --background: oklch(0.15 0.03 40);
+  --foreground: oklch(0.96 0.02 85);
+
+  --card: oklch(0.18 0.03 40 / 0.7);
+  --card-foreground: oklch(0.96 0.02 85);
+
+  --primary: oklch(0.58 0.14 145);
+  --primary-foreground: oklch(0.12 0.03 40);
+
+  --secondary: oklch(0.22 0.03 40);
+  --secondary-foreground: oklch(0.96 0.02 85);
+
+  --muted: oklch(0.22 0.03 40);
+  --muted-foreground: oklch(0.75 0.04 85);
+
+  --accent: oklch(0.68 0.15 75);
+  --accent-foreground: oklch(0.12 0.03 40);
+
+  --border: oklch(0.28 0.03 40);
+  --input: oklch(0.25 0.03 40);
+  --ring: oklch(0.58 0.14 145);
 }
 
 @theme inline {
   --font-sans: "Source Sans 3", "Source Sans 3 Fallback", system-ui, sans-serif;
   --font-serif: "Playfair Display", "Playfair Display Fallback", Georgia, serif;
-  --font-mono: "Geist Mono", "Geist Mono Fallback", monospace;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -98,60 +92,112 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-2xl: calc(var(--radius) * 2);
+
+  --shadow-premium: 0 10px 30px -10px oklch(0 0 0 / 0.1), 0 4px 6px -4px oklch(0 0 0 / 0.05);
+  --shadow-glass: 0 8px 32px 0 oklch(0.1 0.1 50 / 0.15);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground selection:bg-primary/20 selection:text-primary transition-colors duration-500;
+    background-image:
+      radial-gradient(circle at 10% 20%, oklch(var(--primary) / 0.03) 0%, transparent 40%),
+      radial-gradient(circle at 90% 80%, oklch(var(--accent) / 0.03) 0%, transparent 40%);
+    background-attachment: fixed;
   }
 }
 
-/* Custom styles for genealogy app */
-.react-flow__node {
-  @apply transition-shadow duration-200;
+@layer components {
+  .glass {
+    @apply backdrop-blur-md bg-card border border-white/20 dark:border-white/10 shadow-glass;
+  }
+
+  .premium-card {
+    @apply bg-card border border-border shadow-premium hover:shadow-2xl hover:-translate-y-1 transition-all duration-300;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-linear-to-br from-foreground to-foreground/60;
+  }
+
+  .animate-reveal {
+    animation: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes pulse-soft {
+
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/30 transition-colors;
+}
+
+/* React Flow Improvements */
+.react-flow__node-person {
+  @apply !shadow-premium !border-none !rounded-2xl;
 }
 
 .react-flow__edge-path {
-  @apply stroke-border;
-  stroke-width: 2;
-}
-
-.react-flow__edge.animated .react-flow__edge-path {
-  @apply stroke-primary;
+  @apply stroke-muted-foreground/30;
   stroke-width: 3;
 }
 
-/* Accessible focus styles */
-.focus-visible-ring:focus-visible {
-  @apply ring-2 ring-ring ring-offset-2 ring-offset-background outline-none;
+.react-flow__controls {
+  @apply !bg-card/80 !backdrop-blur !border-border !rounded-xl !overflow-hidden;
 }
 
-/* Large touch targets for elderly users */
-.touch-target {
-  @apply min-h-12 min-w-12;
-}
-
-/* Readable text for elderly users */
-.readable-text {
-  @apply text-lg leading-relaxed tracking-wide;
+.react-flow__minimap {
+  @apply !bg-card/90 !backdrop-blur !border-border !rounded-2xl !shadow-glass;
 }

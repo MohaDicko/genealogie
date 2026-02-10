@@ -51,7 +51,7 @@ export function FamilyTree({ rootPerson, allPersons, initialGenerations = 3 }: F
     }, [])
 
     return (
-        <div className="h-[calc(100vh-100px)] w-full border border-border rounded-lg overflow-hidden bg-background">
+        <div className="h-[calc(100vh-120px)] w-full border-none rounded-[2.5rem] overflow-hidden bg-background/50 shadow-premium relative">
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -59,33 +59,39 @@ export function FamilyTree({ rootPerson, allPersons, initialGenerations = 3 }: F
                 onEdgesChange={onEdgesChange}
                 nodeTypes={nodeTypes}
                 fitView
-                minZoom={0.2}
-                maxZoom={4}
+                minZoom={0.1}
+                maxZoom={2}
                 defaultEdgeOptions={{
-                    type: "smoothstep", // Lignes coudées plus propres pour les arbres
+                    type: "smoothstep",
                     animated: false,
-                    style: { stroke: "hsl(var(--muted-foreground))", strokeWidth: 2 },
+                    style: { stroke: "oklch(var(--primary) / 0.2)", strokeWidth: 3 },
                 }}
-                proOptions={{ hideAttribution: true }} // Pour nettoyer l'UI si on a la licence, sinon laisser false
+                proOptions={{ hideAttribution: true }}
             >
-                <Background variant={BackgroundVariant.Dots} gap={12} size={1} color="hsl(var(--muted-foreground))" className="opacity-20" />
-                <Controls showInteractive={false} className="bg-background border-border" />
+                <Background
+                    variant={BackgroundVariant.Lines}
+                    gap={40}
+                    size={1}
+                    color="oklch(var(--primary) / 0.03)"
+                />
+                <Controls showInteractive={false} className="!bg-card/80 !backdrop-blur !border-border !rounded-2xl !overflow-hidden !shadow-glass" />
                 <MiniMap
                     nodeColor={(n) => {
-                        if (n.type === 'person') return 'hsl(var(--primary))';
+                        if (n.type === 'person') return 'oklch(var(--primary))';
                         return '#eee';
                     }}
-                    className="bg-background border border-border rounded-lg"
+                    className="!bg-card/80 !backdrop-blur !border-border !rounded-2xl !shadow-glass"
                 />
 
-                <Panel position="top-right" className="bg-background/80 backdrop-blur-sm p-2 rounded-lg border border-border flex gap-2">
-                    <Button variant="outline" size="sm" className="gap-2">
-                        <Filter className="h-4 w-4" />
-                        Filtres
+                <Panel position="top-right" className="glass p-2 rounded-2xl flex gap-3 m-6">
+                    <Button variant="ghost" size="sm" className="gap-2 font-bold hover:bg-primary/10">
+                        <Filter className="h-4 w-4 text-primary" />
+                        Générations
                     </Button>
-                    <Button variant="outline" size="sm" className="gap-2">
-                        <Search className="h-4 w-4" />
-                        Rechercher
+                    <div className="w-px h-6 bg-border/50 self-center" />
+                    <Button variant="ghost" size="sm" className="gap-2 font-bold hover:bg-primary/10">
+                        <Search className="h-4 w-4 text-primary" />
+                        Localiser
                     </Button>
                 </Panel>
             </ReactFlow>

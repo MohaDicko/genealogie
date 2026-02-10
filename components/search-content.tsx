@@ -70,7 +70,7 @@ export function SearchContent() {
           Trouvez un membre de votre famille par nom, lieu de naissance ou profession
         </p>
 
-        <form onSubmit={handleSearch} className="flex gap-3">
+        <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
@@ -82,7 +82,7 @@ export function SearchContent() {
               autoFocus
             />
           </div>
-          <Button type="submit" size="lg" className="h-14 px-8 touch-target" disabled={isPending}>
+          <Button type="submit" size="lg" className="h-14 px-8 touch-target w-full sm:w-auto" disabled={isPending}>
             {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : "Rechercher"}
           </Button>
         </form>

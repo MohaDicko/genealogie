@@ -19,7 +19,7 @@ const sourceSans = Source_Sans_3({
 })
 
 export const metadata: Metadata = {
-  title: "Mémoire Familiale | Sahel Généalogie",
+  title: "Famille TOURE | Sahel Généalogie",
   description:
     "Préservez l'histoire de votre famille. Visualisez votre arbre généalogique, documentez les biographies et tracez vos lignées sur plusieurs générations.",
   generator: "v0.app",

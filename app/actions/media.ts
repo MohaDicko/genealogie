@@ -2,6 +2,8 @@
 
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth-options"
 
 export async function addMediaAction(personId: string, data: {
     url: string
@@ -10,6 +12,11 @@ export async function addMediaAction(personId: string, data: {
     description?: string
     date?: Date
 }) {
+    const session = await getServerSession(authOptions)
+    if (!session || !session.user || (session as any).user.role === "VIEWER") {
+        return { success: false, error: "Vous n'avez pas les droits nécessaires pour ajouter des médias." }
+    }
+
     try {
         const media = await prisma.media.create({
             data: {
@@ -26,6 +33,13 @@ export async function addMediaAction(personId: string, data: {
 }
 
 export async function deleteMediaAction(mediaId: string, personId: string) {
+    const session = await getServerSession(authOptions)
+    // Only contributors or admins can delete media. Let's say only ADMIN for deletion to be safe, or just contributors.
+    // Let's go with Admin/Member for media delete too.
+    if (!session || !session.user || (session as any).user.role === "VIEWER") {
+        return { success: false, error: "Non autorisé" }
+    }
+
     try {
         await prisma.media.delete({
             where: { id: mediaId }

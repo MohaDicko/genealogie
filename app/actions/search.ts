@@ -9,10 +9,7 @@ export async function searchPeopleAction(query: string): Promise<Person[]> {
     const results = await prisma.person.findMany({
         where: {
             OR: [
-                { firstName: { contains: query } }, // SQLite search is case-sensitive by default usually, but Prisma might normalize. 
-                // In proper PostgreSQL we'd use mode: 'insensitive', but here we are on SQLite.
-                // For standard SQLite in Prisma, contains is case-insensitive usually? Let's check docs or assume basic behavior.
-                // Note: Prisma with SQLite 'contains' is usually case-insensitive.
+                { firstName: { contains: query } },
                 { lastName: { contains: query } },
                 { birthPlace: { contains: query } },
             ],

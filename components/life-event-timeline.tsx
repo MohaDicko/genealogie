@@ -17,39 +17,41 @@ interface LifeEventTimelineProps {
 
 export function LifeEventTimeline({ events }: LifeEventTimelineProps) {
     return (
-        <div className="space-y-12 relative before:absolute before:inset-0 before:left-[15px] before:h-full before:w-0.5 before:bg-gradient-to-b before:from-primary/20 before:via-primary/20 before:to-transparent">
+        <div className="space-y-16 relative before:absolute before:inset-0 before:left-[-1px] before:h-full before:w-px before:bg-linear-to-b before:from-primary before:via-accent before:to-transparent">
             {events.map((event, index) => (
-                <div key={event.id} className="relative pl-10 group">
-                    {/* Dot */}
-                    <div className="absolute left-0 top-1.5 h-8 w-8 rounded-full border-4 border-background bg-primary group-hover:scale-110 transition-transform flex items-center justify-center shadow-sm z-10">
-                        <div className="h-2 w-2 rounded-full bg-background" />
-                    </div>
+                <div key={event.id} className="relative pl-12 group animate-reveal" style={{ animationDelay: `${index * 0.1}s` }}>
+                    {/* Decorative Dot */}
+                    <div className="absolute -left-[10px] top-0 h-5 w-5 rounded-full border-4 border-background bg-primary shadow-lg ring-4 ring-primary/5 transition-all duration-500 group-hover:scale-125 group-hover:bg-accent z-10" />
 
-                    <div className="flex flex-col gap-1">
-                        <div className="flex items-center gap-2">
-                            <span className="text-sm font-bold text-primary uppercase tracking-tighter bg-primary/10 px-2 py-0.5 rounded">
+                    <div className="flex flex-col gap-3">
+                        <div className="flex flex-wrap items-center gap-4">
+                            <div className="px-4 py-1.5 rounded-full bg-primary/10 text-primary font-black text-[10px] uppercase tracking-widest shadow-inner">
                                 {formatDateFr(event.date)}
-                            </span>
-                            <h3 className="text-xl font-serif font-bold text-foreground">{event.title}</h3>
+                            </div>
+                            <h3 className="text-2xl font-serif font-black text-foreground group-hover:text-primary transition-colors tracking-tight">
+                                {event.title}
+                            </h3>
                         </div>
 
-                        <div className="bg-muted/30 rounded-xl p-4 mt-2 border border-border/50 group-hover:bg-muted/50 transition-colors">
+                        <div className="premium-card rounded-2xl p-6 bg-background/50 backdrop-blur-sm border-border group-hover:border-primary/20 transition-all">
                             {event.place && (
-                                <p className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                                    <MapPin className="h-4 w-4 text-primary/60" />
+                                <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground mb-4">
+                                    <div className="h-6 w-6 rounded-lg bg-accent/10 flex items-center justify-center">
+                                        <MapPin className="h-3.5 w-3.5 text-accent" />
+                                    </div>
                                     {event.place}
-                                </p>
+                                </div>
                             )}
 
                             {event.description ? (
-                                <p className="text-foreground/80 leading-relaxed italic">
+                                <p className="text-foreground/80 leading-relaxed text-lg font-serif italic text-pretty">
                                     &ldquo;{event.description}&rdquo;
                                 </p>
                             ) : (
-                                <p className="text-muted-foreground text-sm flex items-center gap-2">
-                                    <Info className="h-4 w-4" />
-                                    Aucune description supplémentaire.
-                                </p>
+                                <div className="flex items-center gap-3 text-muted-foreground/50 italic text-sm py-2">
+                                    <div className="h-1 w-8 bg-border/50 rounded-full" />
+                                    Postérité en attente de récit
+                                </div>
                             )}
                         </div>
                     </div>

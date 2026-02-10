@@ -23,23 +23,62 @@ export const authOptions: NextAuthOptions = {
                     return null
                 }
 
-                // Logique de vérification du code familial ici
-                // Pour l'instant, on simule une réussite si le code est 'DEMO'
-
-                // Ceci est un placeholder. La vraie logique devra vérifier
-                // la table Family et créer/récupérer l'utilisateur.
-
-                const user = await prisma.user.findUnique({
-                    where: { email: credentials.email },
+                // 1. Vérifier si le code correspond à une famille existante
+                const family = await prisma.family.findUnique({
+                    where: { inviteCode: credentials.code },
+                    include: { members: { include: { user: true } } }
                 })
 
-                if (!user) {
-                    // Création utilisateur si n'existe pas (logique simplifiée)
-                    // return await prisma.user.create({ data: { email: credentials.email } })
+                if (!family) {
                     return null
                 }
 
-                return user
+                // 2. Vérifier si l'utilisateur avec cet email est membre de cette famille
+                const membership = family.members.find(
+                    (m) => m.user.email?.toLowerCase() === credentials.email.toLowerCase()
+                )
+
+                if (membership && membership.user) {
+                    return {
+                        id: membership.user.id,
+                        email: membership.user.email,
+                        name: membership.user.name,
+                        image: membership.user.image
+                    }
+                }
+
+                // Cas spécial : si c'est le code de démo et que l'utilisateur n'existe pas, on le crée 
+                // (On garde ça pour faciliter vos tests si vous voulez tester de nouveaux emails)
+                if (credentials.code === "DICKO2026" || credentials.code === "DEMO123") {
+                    let user = await prisma.user.findUnique({
+                        where: { email: credentials.email.toLowerCase() }
+                    })
+
+                    if (!user) {
+                        user = await prisma.user.create({
+                            data: {
+                                email: credentials.email.toLowerCase(),
+                                name: credentials.email.split('@')[0],
+                            }
+                        })
+
+                        await prisma.familyMember.create({
+                            data: {
+                                userId: user.id,
+                                familyId: family.id,
+                                role: "MEMBER" // Rôle par défaut pour les nouveaux auto-créés
+                            }
+                        })
+                    }
+
+                    return {
+                        id: user.id,
+                        email: user.email,
+                        name: user.name,
+                    }
+                }
+
+                return null
             },
         }),
     ],
@@ -47,6 +86,12 @@ export const authOptions: NextAuthOptions = {
         async session({ session, token }) {
             if (session.user && token.sub) {
                 session.user.id = token.sub
+
+                const membership = await prisma.familyMember.findFirst({
+                    where: { userId: token.sub }
+                })
+
+                session.user.role = membership?.role || "VIEWER"
             }
             return session
         },

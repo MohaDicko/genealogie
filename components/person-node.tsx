@@ -1,21 +1,21 @@
 "use client"
 
 import { memo } from "react"
-import { Handle, Position, type NodeProps } from "@xyflow/react"
+import { Handle, Position, type NodeProps, type Node } from "@xyflow/react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { calculateAge, formatDateFr } from "@/lib/genealogy-utils"
 import type { Person } from "@/lib/types"
 
-interface PersonNodeData {
+type PersonNodeData = {
   person: Person
   generation: number
   isRoot?: boolean
   isDirectLineage?: boolean
-}
+} & Record<string, unknown>
 
-function PersonNodeComponent({ data, selected }: NodeProps<PersonNodeData>) {
+function PersonNodeComponent({ data, selected }: NodeProps<Node<PersonNodeData, "person">>) {
   const { person, isRoot, isDirectLineage } = data
   const age = calculateAge(person.birthDate, person.deathDate)
   const isDeceased = !!person.deathDate

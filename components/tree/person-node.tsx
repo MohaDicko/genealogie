@@ -28,46 +28,54 @@ const PersonNode = ({ data }: NodeProps<PersonNodeProps>) => {
 
     return (
         <div
-            className="relative group"
+            className="relative group outline-none"
             onClick={() => router.push(`/person/${person.id}`)}
         >
             {/* Handle du haut (Target) - Connexion depuis les parents */}
             <Handle
                 type="target"
                 position={Position.Top}
-                className="!bg-muted-foreground !w-3 !h-3 -mt-2"
+                className="!bg-primary/40 !w-2 !h-2 -mt-1 border-none transition-all group-hover:!bg-primary group-hover:!scale-150"
                 isConnectable={false}
             />
 
             <TooltipProvider>
-                <Tooltip>
+                <Tooltip delayDuration={300}>
                     <TooltipTrigger asChild>
                         <Card
                             className={cn(
-                                "w-[240px] border-2 shadow-sm transition-all hover:shadow-md cursor-pointer",
-                                isRoot ? "border-primary bg-primary/5" : "border-border",
-                                isDirectLineage ? "border-accent bg-accent/5" : "",
+                                "w-[260px] border-none shadow-premium transition-all duration-300 group-hover:shadow-2xl group-hover:-translate-y-1 overflow-hidden",
+                                isRoot ? "bg-primary/10 ring-2 ring-primary/30" : "bg-card/90 backdrop-blur-sm",
+                                isDirectLineage ? "ring-2 ring-accent/30" : "",
                             )}
                         >
-                            <CardContent className="p-3 flex items-center gap-3">
-                                <Avatar className={cn("h-12 w-12 border-2", isRoot ? "border-primary" : "border-muted")}>
+                            <CardContent className="p-4 flex items-center gap-4">
+                                <Avatar className={cn(
+                                    "h-14 w-14 rounded-2xl border-2 transition-transform duration-500 group-hover:scale-105",
+                                    isRoot ? "border-primary shadow-lg shadow-primary/20" : "border-background shadow-md"
+                                )}>
                                     <AvatarImage src={person.photoUrl || undefined} alt={person.firstName} className="object-cover" />
-                                    <AvatarFallback className={cn("text-sm", isRoot ? "bg-primary text-primary-foreground" : "")}>
+                                    <AvatarFallback className={cn("text-lg font-serif", isRoot ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground")}>
                                         {initials}
                                     </AvatarFallback>
                                 </Avatar>
 
                                 <div className="flex-1 min-w-0">
-                                    <p className="font-bold text-sm truncate font-serif">
+                                    <p className={cn(
+                                        "font-serif font-black text-base truncate transition-colors",
+                                        isRoot ? "text-primary" : "text-foreground group-hover:text-primary"
+                                    )}>
                                         {person.firstName} {person.lastName}
                                     </p>
-                                    <p className="text-xs text-muted-foreground truncate">
-                                        {person.birthDate ? new Date(person.birthDate).getFullYear() : "?"}
-                                        {" - "}
-                                        {person.deathDate ? new Date(person.deathDate).getFullYear() : (person.birthDate ? "Présent" : "?")}
-                                    </p>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
+                                            {person.birthDate ? new Date(person.birthDate).getFullYear() : "?"}
+                                            {" — "}
+                                            {person.deathDate ? new Date(person.deathDate).getFullYear() : (person.birthDate ? "Présent" : "?")}
+                                        </p>
+                                    </div>
                                     {person.occupation && (
-                                        <p className="text-[10px] text-muted-foreground truncate italic mt-0.5">
+                                        <p className="text-[11px] text-muted-foreground truncate font-medium mt-1 italic group-hover:text-foreground/70 transition-colors">
                                             {person.occupation}
                                         </p>
                                     )}
@@ -75,24 +83,24 @@ const PersonNode = ({ data }: NodeProps<PersonNodeProps>) => {
                             </CardContent>
                         </Card>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom" className="max-w-[300px] text-sm p-4">
-                        <div className="space-y-2">
-                            <h4 className="font-bold text-base font-serif">{person.firstName} {person.lastName}</h4>
-                            <div className="grid grid-cols-2 gap-2 text-xs">
-                                <div>
-                                    <span className="font-semibold text-muted-foreground">Naissance:</span><br />
-                                    {formatDateFr(person.birthDate)} {person.birthPlace ? `à ${person.birthPlace}` : ""}
+                    <TooltipContent side="bottom" className="max-w-[320px] p-0 overflow-hidden border-none shadow-glass rounded-2xl">
+                        <div className="bg-linear-to-br from-primary/5 to-accent/5 p-5">
+                            <h4 className="font-serif font-black text-xl text-gradient mb-3">{person.firstName} {person.lastName}</h4>
+                            <div className="space-y-3 text-sm">
+                                <div className="flex items-start gap-2">
+                                    <span className="font-black text-[10px] uppercase tracking-widest text-primary/60 mt-0.5">Né(e) :</span>
+                                    <span className="font-medium">{formatDateFr(person.birthDate)} {person.birthPlace ? `à ${person.birthPlace}` : ""}</span>
                                 </div>
                                 {person.deathDate && (
-                                    <div>
-                                        <span className="font-semibold text-muted-foreground">Décès:</span><br />
-                                        {formatDateFr(person.deathDate)} {person.deathPlace ? `à ${person.deathPlace}` : ""}
+                                    <div className="flex items-start gap-2">
+                                        <span className="font-black text-[10px] uppercase tracking-widest text-destructive/60 mt-0.5">Décès :</span>
+                                        <span className="font-medium">{formatDateFr(person.deathDate)} {person.deathPlace ? `à ${person.deathPlace}` : ""}</span>
                                     </div>
                                 )}
                             </div>
                             {person.biography && (
-                                <div className="pt-2 border-t border-border mt-2">
-                                    <p className="italic text-muted-foreground line-clamp-3">
+                                <div className="pt-4 border-t border-border/50 mt-4">
+                                    <p className="italic text-muted-foreground text-xs leading-relaxed line-clamp-4">
                                         &ldquo;{person.biography}&rdquo;
                                     </p>
                                 </div>
@@ -106,7 +114,7 @@ const PersonNode = ({ data }: NodeProps<PersonNodeProps>) => {
             <Handle
                 type="source"
                 position={Position.Bottom}
-                className="!bg-muted-foreground !w-3 !h-3 -mb-2"
+                className="!bg-primary/40 !w-2 !h-2 -mb-1 border-none transition-all group-hover:!bg-primary group-hover:!scale-150"
                 isConnectable={false}
             />
         </div>

@@ -4,7 +4,8 @@ import * as React from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import * as z from "zod"
+import * as z from "zod" // keep specific z imports if needed, but schema is imported
+import { personSchema } from "@/lib/validations/person"
 import { Loader2, Save, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -31,24 +32,6 @@ import { createPersonAction } from "@/app/actions/people"
 import { toast } from "sonner"
 import { Person } from "@/lib/types"
 
-const personSchema = z.object({
-    firstName: z.string().min(2, {
-        message: "Le prénom doit avoir au moins 2 caractères.",
-    }),
-    lastName: z.string().min(2, {
-        message: "Le nom doit avoir au moins 2 caractères.",
-    }),
-    gender: z.enum(["MALE", "FEMALE", "OTHER"]),
-    birthName: z.string().optional(),
-    birthDate: z.string().optional(),
-    birthPlace: z.string().optional(),
-    occupation: z.string().optional(),
-    biography: z.string().optional(),
-    fatherId: z.string().optional(),
-    motherId: z.string().optional(),
-    spouseId: z.string().optional(),
-})
-
 interface NewPersonFormProps {
     existingPeople: Person[]
 }
@@ -57,14 +40,15 @@ export function NewPersonForm({ existingPeople }: NewPersonFormProps) {
     const router = useRouter()
     const [isPending, startTransition] = React.useTransition()
 
-    const form = useForm<z.infer<typeof personSchema>>({
+    // Note: We use z.input for the form to handle strings from inputs, but zodResolver will validate/transform
+    const form = useForm<z.input<typeof personSchema>>({
         resolver: zodResolver(personSchema),
         defaultValues: {
             firstName: "",
             lastName: "",
             gender: "MALE",
             birthName: "",
-            birthDate: "",
+            birthDate: "", // String empty by default
             birthPlace: "",
             occupation: "",
             biography: "",
@@ -74,30 +58,39 @@ export function NewPersonForm({ existingPeople }: NewPersonFormProps) {
         },
     })
 
-    function onSubmit(values: z.infer<typeof personSchema>) {
+    const onSubmit = (values: any) => {
+        console.log("NewPersonForm onSubmit triggered with values:", values);
         startTransition(async () => {
-            const data = {
-                ...values,
-                birthDate: values.birthDate ? new Date(values.birthDate) : null,
-                fatherId: values.fatherId || null,
-                motherId: values.motherId || null,
-                spouseId: values.spouseId || null,
-            }
+            try {
+                const validatedValues = values as z.infer<typeof personSchema>;
+                console.log("Calling createPersonAction with:", validatedValues);
+                const result = await createPersonAction(validatedValues)
+                console.log("createPersonAction result:", result);
 
-            const result = await createPersonAction(data as any)
-
-            if (result.success) {
-                toast.success("Membre ajouté avec succès")
-                router.push(`/person/${result.person?.id}`)
-            } else {
-                toast.error(result.error || "Une erreur est survenue")
+                if (result.success) {
+                    toast.success("Membre ajouté avec succès")
+                    router.push(`/person/${result.person?.id}`)
+                } else {
+                    toast.error(result.error || "Une erreur est survenue")
+                }
+            } catch (error: any) {
+                console.error("Submission error:", error);
+                toast.error("Une erreur imprévue est survenue: " + error.message);
             }
         })
     }
 
+    const onFormError = (errors: any) => {
+        console.log("Form Validation Errors:", errors);
+        const errorMessages = Object.entries(errors)
+            .map(([key, value]: [string, any]) => `${key}: ${value.message}`)
+            .join(", ");
+        toast.error("Veuillez corriger les erreurs suivantes : " + errorMessages);
+    }
+
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit, onFormError)} className="space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Prénom */}
                     <FormField
@@ -107,7 +100,14 @@ export function NewPersonForm({ existingPeople }: NewPersonFormProps) {
                             <FormItem>
                                 <FormLabel>Prénom</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Ex: Marie" {...field} />
+                                    <Input
+                                        placeholder="Ex: Marie"
+                                        name={field.name}
+                                        onBlur={field.onBlur}
+                                        onChange={field.onChange}
+                                        ref={field.ref}
+                                        value={field.value ?? ""}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -122,7 +122,14 @@ export function NewPersonForm({ existingPeople }: NewPersonFormProps) {
                             <FormItem>
                                 <FormLabel>Nom</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Ex: Diallo" {...field} />
+                                    <Input
+                                        placeholder="Ex: Diallo"
+                                        name={field.name}
+                                        onBlur={field.onBlur}
+                                        onChange={field.onChange}
+                                        ref={field.ref}
+                                        value={field.value ?? ""}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -139,7 +146,7 @@ export function NewPersonForm({ existingPeople }: NewPersonFormProps) {
                                 <FormControl>
                                     <RadioGroup
                                         onValueChange={field.onChange}
-                                        defaultValue={field.value}
+                                        value={field.value ?? "MALE"}
                                         className="flex gap-4"
                                     >
                                         <FormItem className="flex items-center space-x-2 space-y-0">
@@ -173,7 +180,14 @@ export function NewPersonForm({ existingPeople }: NewPersonFormProps) {
                             <FormItem>
                                 <FormLabel>Nom de naissance (si différent)</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Ex: Sow" {...field} />
+                                    <Input
+                                        placeholder="Ex: Sow"
+                                        name={field.name}
+                                        onBlur={field.onBlur}
+                                        onChange={field.onChange}
+                                        ref={field.ref}
+                                        value={field.value ?? ""}
+                                    />
                                 </FormControl>
                                 <FormDescription>
                                     Optionnel, utile pour les noms de jeune fille.
@@ -191,7 +205,16 @@ export function NewPersonForm({ existingPeople }: NewPersonFormProps) {
                             <FormItem>
                                 <FormLabel>Date de naissance</FormLabel>
                                 <FormControl>
-                                    <Input type="date" {...field} />
+                                    <Input
+                                        type="date"
+                                        name={field.name}
+                                        onBlur={field.onBlur}
+                                        onChange={field.onChange}
+                                        ref={field.ref}
+                                        value={field.value instanceof Date
+                                            ? field.value.toISOString().split('T')[0]
+                                            : (typeof field.value === 'string' ? field.value : "")}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -206,7 +229,14 @@ export function NewPersonForm({ existingPeople }: NewPersonFormProps) {
                             <FormItem>
                                 <FormLabel>Lieu de naissance</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Ex: Dakar, Sénégal" {...field} />
+                                    <Input
+                                        placeholder="Ex: Dakar, Sénégal"
+                                        name={field.name}
+                                        onBlur={field.onBlur}
+                                        onChange={field.onChange}
+                                        ref={field.ref}
+                                        value={field.value ?? ""}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -221,7 +251,14 @@ export function NewPersonForm({ existingPeople }: NewPersonFormProps) {
                             <FormItem>
                                 <FormLabel>Profession / Activité</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Ex: Enseignante" {...field} />
+                                    <Input
+                                        placeholder="Ex: Enseignante"
+                                        name={field.name}
+                                        onBlur={field.onBlur}
+                                        onChange={field.onChange}
+                                        ref={field.ref}
+                                        value={field.value ?? ""}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -240,7 +277,11 @@ export function NewPersonForm({ existingPeople }: NewPersonFormProps) {
                                 <Textarea
                                     placeholder="Racontez l'histoire de cette personne..."
                                     className="min-h-[120px]"
-                                    {...field}
+                                    name={field.name}
+                                    onBlur={field.onBlur}
+                                    onChange={field.onChange}
+                                    ref={field.ref}
+                                    value={field.value ?? ""}
                                 />
                             </FormControl>
                             <FormMessage />
@@ -258,14 +299,14 @@ export function NewPersonForm({ existingPeople }: NewPersonFormProps) {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Père</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select onValueChange={field.onChange} value={field.value ?? "none"}>
                                         <FormControl>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Sélectionner le père" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="">Aucun</SelectItem>
+                                            <SelectItem value="none">Aucun</SelectItem>
                                             {existingPeople
                                                 .filter((p) => p.gender === "MALE")
                                                 .map((p) => (
@@ -287,14 +328,14 @@ export function NewPersonForm({ existingPeople }: NewPersonFormProps) {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Mère</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select onValueChange={field.onChange} value={field.value ?? "none"}>
                                         <FormControl>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Sélectionner la mère" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="">Aucune</SelectItem>
+                                            <SelectItem value="none">Aucune</SelectItem>
                                             {existingPeople
                                                 .filter((p) => p.gender === "FEMALE")
                                                 .map((p) => (
@@ -316,14 +357,14 @@ export function NewPersonForm({ existingPeople }: NewPersonFormProps) {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Conjoint(e)</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select onValueChange={field.onChange} value={field.value ?? "none"}>
                                         <FormControl>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Sélectionner le conjoint" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="">Aucun</SelectItem>
+                                            <SelectItem value="none">Aucun</SelectItem>
                                             {existingPeople.map((p) => (
                                                 <SelectItem key={p.id} value={p.id}>
                                                     {p.firstName} {p.lastName}
@@ -338,17 +379,17 @@ export function NewPersonForm({ existingPeople }: NewPersonFormProps) {
                     </div>
                 </div>
 
-                <div className="flex justify-end gap-4 pt-4">
+                <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4 pt-6">
                     <Button
                         type="button"
-                        variant="outline"
+                        variant="ghost"
                         onClick={() => router.back()}
-                        className="gap-2"
+                        className="gap-2 w-full sm:w-auto"
                     >
                         <X className="h-4 w-4" />
                         Annuler
                     </Button>
-                    <Button type="submit" disabled={isPending} className="gap-2">
+                    <Button type="submit" disabled={isPending} className="gap-2 w-full sm:w-auto">
                         {isPending ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
                         ) : (

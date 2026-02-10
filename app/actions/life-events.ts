@@ -2,6 +2,8 @@
 
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth-options"
 
 export async function addLifeEventAction(personId: string, data: {
     type: string
@@ -10,6 +12,11 @@ export async function addLifeEventAction(personId: string, data: {
     date: Date
     place?: string
 }) {
+    const session = await getServerSession(authOptions)
+    if (!session || !session.user || (session as any).user.role === "VIEWER") {
+        return { success: false, error: "Vous n'avez pas les droits nécessaires pour ajouter des événements." }
+    }
+
     try {
         const event = await prisma.lifeEvent.create({
             data: {

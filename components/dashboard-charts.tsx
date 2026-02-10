@@ -59,41 +59,45 @@ export function DashboardCharts({ persons }: DashboardChartsProps) {
     }, [persons])
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
             {/* Distribution par décennie */}
-            <Card className="border-border/50 shadow-sm">
-                <CardHeader>
-                    <CardTitle className="text-lg font-serif">Membres par décennie de naissance</CardTitle>
+            <Card className="premium-card overflow-hidden">
+                <CardHeader className="bg-muted/30 border-b border-border/50">
+                    <CardTitle className="text-xl font-serif">Décennies de Naissance</CardTitle>
                 </CardHeader>
-                <CardContent>
-                    <div className="h-[300px] w-full">
+                <CardContent className="pt-8">
+                    <div className="h-[320px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={decadeData}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.1} />
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.05} />
                                 <XAxis
                                     dataKey="name"
                                     axisLine={false}
                                     tickLine={false}
                                     fontSize={12}
-                                    tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                                    tick={{ fill: 'oklch(var(--muted-foreground))' }}
+                                    dy={10}
                                 />
                                 <YAxis
                                     axisLine={false}
                                     tickLine={false}
                                     fontSize={12}
-                                    tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                                    tick={{ fill: 'oklch(var(--muted-foreground))' }}
                                 />
                                 <Tooltip
                                     contentStyle={{
-                                        backgroundColor: 'hsl(var(--background))',
-                                        borderColor: 'hsl(var(--border))',
-                                        borderRadius: '8px'
+                                        backgroundColor: 'oklch(var(--card))',
+                                        borderColor: 'oklch(var(--border))',
+                                        borderRadius: '16px',
+                                        boxShadow: 'var(--shadow-premium)',
+                                        border: 'none',
+                                        backdropFilter: 'blur(8px)'
                                     }}
-                                    cursor={{ fill: 'hsl(var(--primary)/0.05)' }}
+                                    cursor={{ fill: 'oklch(var(--primary)/0.05)' }}
                                 />
-                                <Bar dataKey="value" name="Membres" radius={[4, 4, 0, 0]}>
+                                <Bar dataKey="value" name="Membres" radius={[8, 8, 0, 0]} barSize={40}>
                                     {decadeData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} fillOpacity={0.8} />
                                     ))}
                                 </Bar>
                             </BarChart>
@@ -103,37 +107,55 @@ export function DashboardCharts({ persons }: DashboardChartsProps) {
             </Card>
 
             {/* Répartition par genre */}
-            <Card className="border-border/50 shadow-sm">
-                <CardHeader>
-                    <CardTitle className="text-lg font-serif">Répartition par genre</CardTitle>
+            <Card className="premium-card overflow-hidden">
+                <CardHeader className="bg-muted/30 border-b border-border/50">
+                    <CardTitle className="text-xl font-serif">Répartition par Genre</CardTitle>
                 </CardHeader>
-                <CardContent>
-                    <div className="h-[300px] w-full">
+                <CardContent className="pt-8">
+                    <div className="h-[320px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                                 <Pie
                                     data={genderData}
                                     cx="50%"
                                     cy="50%"
-                                    innerRadius={60}
+                                    innerRadius={70}
                                     outerRadius={100}
-                                    paddingAngle={5}
+                                    paddingAngle={8}
                                     dataKey="value"
-                                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                    stroke="none"
                                 >
                                     {genderData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.name === "Femmes" ? "hsl(var(--chart-2))" : "hsl(var(--primary))"} />
+                                        <Cell
+                                            key={`cell-${index}`}
+                                            fill={entry.name === "Femmes" ? "oklch(var(--chart-2))" : "oklch(var(--primary))"}
+                                            fillOpacity={0.8}
+                                        />
                                     ))}
                                 </Pie>
                                 <Tooltip
                                     contentStyle={{
-                                        backgroundColor: 'hsl(var(--background))',
-                                        borderColor: 'hsl(var(--border))',
-                                        borderRadius: '8px'
+                                        backgroundColor: 'oklch(var(--card))',
+                                        borderColor: 'oklch(var(--border))',
+                                        borderRadius: '16px',
+                                        boxShadow: 'var(--shadow-premium)',
+                                        border: 'none',
+                                        backdropFilter: 'blur(8px)'
                                     }}
                                 />
                             </PieChart>
                         </ResponsiveContainer>
+                        <div className="flex justify-center gap-6 mt-4">
+                            {genderData.map((entry, index) => (
+                                <div key={index} className="flex items-center gap-2">
+                                    <div
+                                        className="h-3 w-3 rounded-full"
+                                        style={{ backgroundColor: entry.name === "Femmes" ? "oklch(var(--chart-2))" : "oklch(var(--primary))" }}
+                                    />
+                                    <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest">{entry.name}</span>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </CardContent>
             </Card>

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Edit2, Loader2 } from "lucide-react"
+import { Edit2, Loader2, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -16,8 +16,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { updatePersonAction } from "@/app/actions/update-person"
+import { deletePersonAction } from "@/app/actions/people"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 
 interface EditPersonDialogProps {
     person: {
@@ -32,12 +34,18 @@ interface EditPersonDialogProps {
         deathDate: Date | string | null
         deathPlace: string | null
     }
+    variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
 }
 
-export function EditPersonDialog({ person }: EditPersonDialogProps) {
+export function EditPersonDialog({ person, variant = "default" }: EditPersonDialogProps) {
     const [open, setOpen] = React.useState(false)
     const [isPending, setIsPending] = React.useState(false)
     const router = useRouter()
+    const { data: session } = useSession()
+
+    const role = session?.user?.role || "VIEWER"
+    const canEdit = role === "ADMIN" || role === "MEMBER"
+    const canDelete = role === "ADMIN"
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -73,17 +81,18 @@ export function EditPersonDialog({ person }: EditPersonDialogProps) {
         }
     }
 
-    // Format date for input type="date"
     const formatDate = (date: Date | string | null) => {
         if (!date) return ""
         const d = new Date(date)
         return d.toISOString().split('T')[0]
     }
 
+    if (!canEdit) return null
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2">
+                <Button variant={variant} size="sm" className="gap-2">
                     <Edit2 className="h-4 w-4" />
                     Modifier le profil
                 </Button>
@@ -151,14 +160,41 @@ export function EditPersonDialog({ person }: EditPersonDialogProps) {
                             />
                         </div>
                     </div>
-                    <DialogFooter>
-                        <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
-                            Annuler
-                        </Button>
-                        <Button type="submit" disabled={isPending}>
-                            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Enregistrer les modifications
-                        </Button>
+                    <DialogFooter className="flex-col sm:flex-row gap-2">
+                        {canDelete && (
+                            <Button
+                                type="button"
+                                variant="destructive"
+                                className="mr-auto gap-2"
+                                onClick={async () => {
+                                    if (confirm("Êtes-vous sûr de vouloir supprimer cette personne ? Cette action est irréversible.")) {
+                                        setIsPending(true)
+                                        const result = await deletePersonAction(person.id)
+                                        setIsPending(false)
+                                        if (result.success) {
+                                            toast.success("Personne supprimée")
+                                            setOpen(false)
+                                            router.push("/")
+                                        } else {
+                                            toast.error(result.error)
+                                        }
+                                    }
+                                }}
+                                disabled={isPending}
+                            >
+                                <Trash2 className="h-4 w-4" />
+                                Supprimer
+                            </Button>
+                        )}
+                        <div className="flex gap-2 ml-auto">
+                            <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
+                                Annuler
+                            </Button>
+                            <Button type="submit" disabled={isPending}>
+                                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                Enregistrer
+                            </Button>
+                        </div>
                     </DialogFooter>
                 </form>
             </DialogContent>
