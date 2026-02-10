@@ -8,8 +8,7 @@ import { Users, TreePine, Calendar, Clock, ArrowRight, Sparkles, History, Plus }
 import Link from "next/link"
 import { prisma } from "@/lib/prisma"
 import { Person } from "@/lib/types" // Utilisation de nos types frontend qui sont alignés avec Prisma
-import { cn } from "@/lib/utils"
-
+import { cn, serialize } from "@/lib/utils"
 // Helper pour convertir le type Prisma en type frontend si besoin (si Date vs string)
 // Prisma retourne des objets Date, nos types acceptent Date | string, donc c'est compatible.
 import { DashboardCharts } from "@/components/dashboard-charts"
@@ -305,7 +304,7 @@ export default async function DashboardPage() {
             </div>
           </div>
           <div className="glass rounded-[3rem] p-4 md:p-12 shadow-premium">
-            <DashboardCharts persons={persons} />
+            <DashboardCharts persons={serialize(persons) as any} />
           </div>
         </section>
       </main>

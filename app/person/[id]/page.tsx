@@ -12,7 +12,7 @@ import { EditPersonDialog } from "@/components/edit-person-dialog"
 import { MediaGallery } from "@/components/media-gallery"
 import { AddMediaDialog } from "@/components/add-media-dialog"
 import { Badge } from "@/components/ui/badge"
-import { Image as ImageIcon } from "lucide-react"
+import { serialize } from "@/lib/utils"
 import { Person } from "@/lib/types"
 
 export default async function PersonPage({ params }: { params: { id: string } }) {
@@ -40,13 +40,15 @@ export default async function PersonPage({ params }: { params: { id: string } })
     notFound()
   }
 
-  // Calculate relationship with root ( Marie TOURE by default for demo)
+  // Calculate relationship with root (Marie TOURE by default for demo)
   const personsMap = new Map(allPersonsSummary.map(p => [p.id, p as unknown as Person]))
   const rootPerson = allPersonsSummary.find(p => p.firstName === "Marie" && p.lastName === "TOURE") || allPersonsSummary[0]
   const relationship = calculateRelationshipPath(rootPerson as unknown as Person, person as unknown as Person, personsMap)
 
   const children = [...person.fatherOf, ...person.motherOf]
   const spouses = person.spouse ? [person.spouse, ...person.spouseOf] : person.spouseOf
+
+  const serializedPerson = serialize(person)
 
   return (
     <div className="min-h-screen bg-background">
@@ -143,7 +145,7 @@ export default async function PersonPage({ params }: { params: { id: string } })
               </div>
 
               <div className="pt-6">
-                <EditPersonDialog person={person as any} variant="outline" />
+                <EditPersonDialog person={serializedPerson as any} variant="outline" />
               </div>
             </div>
           </div>
@@ -173,7 +175,7 @@ export default async function PersonPage({ params }: { params: { id: string } })
                   ) : (
                     <div className="text-center py-20 bg-muted/20 rounded-[2rem] border-2 border-dashed border-border/50 group">
                       <p className="italic text-muted-foreground text-lg mb-6">Ajoutez les chapitres marquants de l&apos;histoire de {person.firstName}.</p>
-                      <EditPersonDialog person={person as any} />
+                      <EditPersonDialog person={serializedPerson as any} />
                     </div>
                   )}
                 </div>
@@ -207,7 +209,7 @@ export default async function PersonPage({ params }: { params: { id: string } })
                 </h2>
                 <AddMediaDialog personId={person.id} personName={person.firstName} />
               </div>
-              <MediaGallery media={person.media as any} personId={person.id} />
+              <MediaGallery media={serialize(person.media) as any} personId={person.id} />
             </section>
           </div>
 

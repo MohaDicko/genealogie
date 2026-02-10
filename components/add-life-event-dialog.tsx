@@ -18,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { addLifeEventAction } from "@/app/actions/life-events"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 
 interface AddLifeEventDialogProps {
     personId: string
@@ -25,9 +26,15 @@ interface AddLifeEventDialogProps {
 }
 
 export function AddLifeEventDialog({ personId, personName }: AddLifeEventDialogProps) {
+    const { data: session } = useSession()
+    const role = (session?.user as any)?.role || "VIEWER"
+    const canEdit = role === "ADMIN" || role === "MEMBER"
+
     const [open, setOpen] = React.useState(false)
     const [isPending, setIsPending] = React.useState(false)
     const router = useRouter()
+
+    if (!canEdit) return null
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()

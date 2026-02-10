@@ -3,6 +3,7 @@ import { Header } from "@/components/header"
 import { prisma } from "@/lib/prisma"
 import { Person } from "@/lib/types"
 import { TreePine } from "lucide-react"
+import { serialize } from "@/lib/utils"
 
 export default async function TreePage() {
   // Récupération des données réelles
@@ -37,9 +38,13 @@ export default async function TreePage() {
   // Casting pour compatibilité Types
   const persons = allPersonsData as unknown as Person[]
   const rootPerson = rootPersonData as unknown as Person
-  const personsMap = new Map(persons.map((p) => [p.id, p]))
 
-  if (!rootPerson) {
+  // Serialization for Client Components
+  const serializedRoot = serialize(rootPerson)
+  const serializedPersons = serialize(persons)
+  const personsMap = new Map(serializedPersons.map((p) => [p.id, p]))
+
+  if (!serializedRoot) {
     return (
       <div className="flex flex-col h-screen bg-background">
         <Header />
@@ -97,7 +102,7 @@ export default async function TreePage() {
 
         {/* Le wrapper Client Component FamilyTree s'occupera d'afficher le graphe */}
         <FamilyTree
-          rootPerson={rootPerson}
+          rootPerson={serializedRoot}
           allPersons={personsMap}
           initialGenerations={4}
         />

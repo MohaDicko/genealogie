@@ -1,12 +1,11 @@
 import { Header } from "@/components/header"
-import { PersonCard } from "@/components/person-card"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { prisma } from "@/lib/prisma"
 import { Person } from "@/lib/types"
-import { Search, Filter, Users, Plus } from "lucide-react"
+import { Users, Plus } from "lucide-react"
 import Link from "next/link"
+import { MembersList } from "@/components/members-list"
+import { serialize } from "@/lib/utils"
 
 export default async function MembersPage() {
   const allPersonsData = await prisma.person.findMany({
@@ -89,79 +88,9 @@ export default async function MembersPage() {
       </div>
 
       <main className="container mx-auto px-4 -mt-10 pb-24 relative z-20">
-        {/* Glassmorphic Filters */}
-        <div className="glass rounded-[2rem] p-4 lg:p-6 mb-16 flex flex-col lg:flex-row gap-4 shadow-premium border-white/40 dark:border-white/5 animate-reveal [animation-delay:0.4s]">
-          <div className="relative flex-1 group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-            <Input
-              type="search"
-              placeholder="Rechercher par nom, métier, lieu..."
-              className="pl-12 h-14 rounded-xl bg-background/50 border-border focus:ring-primary/20 text-lg transition-all"
-            />
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Select defaultValue="all">
-              <SelectTrigger className="w-full sm:w-56 h-14 rounded-xl bg-background/50 border-border text-lg font-medium">
-                <div className="flex items-center gap-2">
-                  <Filter className="h-4 w-4" />
-                  <SelectValue placeholder="Catégorie" />
-                </div>
-              </SelectTrigger>
-              <SelectContent className="rounded-xl border-border">
-                <SelectItem value="all">Tous les membres</SelectItem>
-                <SelectItem value="living">Membres vivants</SelectItem>
-                <SelectItem value="deceased">Membres décédés</SelectItem>
-                <SelectItem value="male">Hommes</SelectItem>
-                <SelectItem value="female">Femmes</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select defaultValue="name">
-              <SelectTrigger className="w-full sm:w-56 h-14 rounded-xl bg-background/50 border-border text-lg font-medium">
-                <SelectValue placeholder="Trier par" />
-              </SelectTrigger>
-              <SelectContent className="rounded-xl border-border">
-                <SelectItem value="name">Nom (A-Z)</SelectItem>
-                <SelectItem value="name-desc">Nom (Z-A)</SelectItem>
-                <SelectItem value="birth">Date de naissance</SelectItem>
-                <SelectItem value="recent">Récemment ajouté</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
 
-        <div className="space-y-24">
-          {/* Living Members */}
-          <section className="animate-reveal [animation-delay:0.5s]">
-            <div className="flex items-center gap-4 mb-8">
-              <h2 className="font-serif text-3xl font-black text-foreground flex items-center gap-4">
-                <span className="h-10 w-1.5 bg-primary rounded-full"></span>
-                Membres Actuels
-                <span className="text-xl font-medium text-muted-foreground font-sans ml-2">({livingMembers.length})</span>
-              </h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {livingMembers.map((person) => (
-                <PersonCard key={person.id} person={person} variant="detailed" />
-              ))}
-            </div>
-          </section>
-
-          {/* Deceased Members */}
-          <section className="animate-reveal [animation-delay:0.6s]">
-            <div className="flex items-center gap-4 mb-8">
-              <h2 className="font-serif text-3xl font-black text-foreground flex items-center gap-4">
-                <span className="h-10 w-1.5 bg-muted-foreground/30 rounded-full"></span>
-                Nos Illustres Ancêtres
-                <span className="text-xl font-medium text-muted-foreground font-sans ml-2">({deceasedMembers.length})</span>
-              </h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {deceasedMembers.map((person) => (
-                <PersonCard key={person.id} person={person} variant="detailed" />
-              ))}
-            </div>
-          </section>
-        </div>
+        {/* Interactive List Component */}
+        <MembersList initialMembers={serialize(persons)} />
       </main>
     </div>
   )

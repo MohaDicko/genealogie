@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { addMediaAction } from "@/app/actions/media"
 import { toast } from "sonner"
+import { useSession } from "next-auth/react"
 
 interface AddMediaDialogProps {
     personId: string
@@ -23,8 +24,14 @@ interface AddMediaDialogProps {
 }
 
 export function AddMediaDialog({ personId, personName }: AddMediaDialogProps) {
+    const { data: session } = useSession()
+    const role = (session?.user as any)?.role || "VIEWER"
+    const canEdit = role === "ADMIN" || role === "MEMBER"
+
     const [open, setOpen] = React.useState(false)
     const [isPending, setIsPending] = React.useState(false)
+
+    if (!canEdit) return null
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()

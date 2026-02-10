@@ -5,13 +5,15 @@ import { Person } from "@/lib/types"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users } from "lucide-react"
 
+import { serialize } from "@/lib/utils"
+
 export default async function NewPersonPage() {
     const allPersons = await prisma.person.findMany({
         orderBy: { lastName: "asc" },
     })
 
     // Conversion simple pour le composant client
-    const persons = allPersons as unknown as Person[]
+    const persons = serialize(allPersons) as unknown as Person[]
 
     return (
         <div className="min-h-screen bg-background">
