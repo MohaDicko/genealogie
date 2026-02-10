@@ -1,18 +1,3 @@
-import withPWAInit from "@ducanh2912/next-pwa";
-
-const withPWA = withPWAInit({
-  dest: "public",
-  cacheOnFrontEndNav: true,
-  aggressiveFrontEndNavCaching: true,
-  reloadOnOnline: true,
-  swcMinify: true,
-  disable: process.env.NODE_ENV === "development",
-  workboxOptions: {
-    disableDevLogs: true,
-  },
-  // ... other options you like
-});
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
@@ -22,10 +7,9 @@ const nextConfig = {
     unoptimized: true,
   },
   experimental: {
-    turbo: {
-      // Empty config to acknowledge Turbopack usage but rely on Webpack for PWA
-    }
+    // Empty config to satisfy Vercel/Turbopack if needed
+    turbo: {}
   }
 };
 
-export default withPWA(nextConfig);
+export default nextConfig;
