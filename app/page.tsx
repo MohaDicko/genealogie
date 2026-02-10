@@ -12,6 +12,7 @@ import { cn, serialize } from "@/lib/utils"
 // Helper pour convertir le type Prisma en type frontend si besoin (si Date vs string)
 // Prisma retourne des objets Date, nos types acceptent Date | string, donc c'est compatible.
 import { DashboardCharts } from "@/components/dashboard-charts"
+import { FamilyMapWrapper } from "@/components/family-map-wrapper"
 
 export default async function DashboardPage() {
   // 1. Stats globales - Execution en parallèle pour plus de rapidité
@@ -291,6 +292,18 @@ export default async function DashboardPage() {
             </div>
           </section>
         )}
+
+
+        {/* Geographic Origins Map */}
+        <section className="relative z-10 animate-reveal [animation-delay:0.9s]">
+          <div className="flex items-center gap-4 mb-8 pl-4 border-l-4 border-accent">
+            <h2 className="font-serif text-4xl font-black text-foreground tracking-tight">Terres d&apos;Origine</h2>
+            <div className="h-px flex-1 bg-border/40" />
+          </div>
+          <div className="glass rounded-[2.5rem] p-2 md:p-6 shadow-premium overflow-hidden">
+            <FamilyMapWrapper persons={serialize(persons) as any[]} />
+          </div>
+        </section>
 
         {/* Global Analytic View */}
         <section className="pt-20 pb-32 animate-reveal [animation-delay:1s]">
