@@ -9,9 +9,9 @@ export async function searchPeopleAction(query: string): Promise<Person[]> {
     const results = await prisma.person.findMany({
         where: {
             OR: [
-                { firstName: { contains: query } },
-                { lastName: { contains: query } },
-                { birthPlace: { contains: query } },
+                { firstName: { contains: query, mode: 'insensitive' } },
+                { lastName: { contains: query, mode: 'insensitive' } },
+                { birthPlace: { contains: query, mode: 'insensitive' } },
             ],
         },
         take: 10,

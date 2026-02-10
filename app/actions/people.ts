@@ -6,32 +6,31 @@ import { personSchema } from "@/lib/validations/person"
 import { z } from "zod"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth-options"
-import fs from 'fs'
 
+// fs usage removed for Vercel edge/serverless compatibility
 export async function createPersonAction(data: z.infer<typeof personSchema>) {
-    const logFile = 'action-log.txt';
-    try {
-        fs.appendFileSync(logFile, `\n--- Action started at ${new Date().toISOString()} ---\n`);
-        fs.appendFileSync(logFile, `Input data: ${JSON.stringify(data)}\n`);
+    console.log(`--- Action started at ${new Date().toISOString()} ---`);
+    console.log(`Input data: ${JSON.stringify(data)}`);
 
+    try {
         // 1. Validation de session
         const session = await getServerSession(authOptions)
 
         if (!session || !session.user || (session as any).user.role === "VIEWER") {
-            fs.appendFileSync(logFile, `Error: No permission (VIEWER)\n`);
+            console.log(`Error: No permission (VIEWER)`);
             return {
                 success: false,
                 error: "Vous n'avez pas les droits nécessaires pour ajouter des membres."
             }
         }
 
-        fs.appendFileSync(logFile, `User ID: ${session.user.id}\n`);
+        console.log(`User ID: ${session.user.id}`);
 
         // 2. Validation des données
         const result = personSchema.safeParse(data);
 
         if (!result.success) {
-            fs.appendFileSync(logFile, `Error: Validation failed: ${JSON.stringify(result.error.format())}\n`);
+            console.log(`Error: Validation failed: ${JSON.stringify(result.error.format())}`);
             return {
                 success: false,
                 error: "Données invalides : " + result.error.issues.map(i => i.message).join(", ")
@@ -39,7 +38,7 @@ export async function createPersonAction(data: z.infer<typeof personSchema>) {
         }
 
         const validData = result.data;
-        fs.appendFileSync(logFile, `Data validated: ${JSON.stringify(validData)}\n`);
+        console.log(`Data validated: ${JSON.stringify(validData)}`);
 
         // 3. Création
         const person = await prisma.person.create({
@@ -61,7 +60,7 @@ export async function createPersonAction(data: z.infer<typeof personSchema>) {
             },
         });
 
-        fs.appendFileSync(logFile, `Success: Created person ${person.id}\n`);
+        console.log(`Success: Created person ${person.id}`);
 
         // 4. Revalidation
         revalidatePath('/')
@@ -75,7 +74,7 @@ export async function createPersonAction(data: z.infer<typeof personSchema>) {
         return { success: true, person }
 
     } catch (error: any) {
-        fs.appendFileSync(logFile, `CRITICAL ERROR: ${error.message}\n`);
+        console.log(`CRITICAL ERROR: ${error.message}`);
         console.error("Error in createPersonAction:", error)
         return {
             success: false,
@@ -85,14 +84,13 @@ export async function createPersonAction(data: z.infer<typeof personSchema>) {
 }
 
 export async function deletePersonAction(id: string) {
-    const logFile = 'action-log.txt';
     try {
         const session = await getServerSession(authOptions)
         if (!session || !session.user || (session as any).user.role !== "ADMIN") {
             return { success: false, error: "Action réservée aux administrateurs." }
         }
 
-        fs.appendFileSync(logFile, `Delete action for ID: ${id} by user: ${session.user.id}\n`);
+        console.log(`Delete action for ID: ${id} by user: ${session.user.id}`);
 
         // Nullify relations where this person is a father, mother or spouse
         await prisma.$transaction([
@@ -119,7 +117,7 @@ export async function deletePersonAction(id: string) {
 
         return { success: true }
     } catch (error: any) {
-        fs.appendFileSync(logFile, `Delete FAILED for ID ${id}: ${error.message}\n`);
+        console.log(`Delete FAILED for ID ${id}: ${error.message}`);
         console.error("Error deleting person:", error)
         return { success: false, error: "Impossible de supprimer cette personne. Vérifiez qu'elle n'a pas de liens familiaux actifs (enfants ou conjoint)." }
     }
