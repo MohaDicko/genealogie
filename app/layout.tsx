@@ -22,7 +22,6 @@ export const metadata: Metadata = {
   title: "Famille TOURE | Sahel Généalogie",
   description:
     "Préservez l'histoire de votre famille. Visualisez votre arbre généalogique, documentez les biographies et tracez vos lignées sur plusieurs générations.",
-  generator: "v0.app",
   keywords: ["généalogie", "arbre généalogique", "histoire familiale", "Sahel", "Afrique", "ancêtres"],
   authors: [{ name: "Sahel Généalogie" }],
   icons: {
