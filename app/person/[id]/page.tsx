@@ -13,6 +13,7 @@ import { MediaGallery } from "@/components/media-gallery"
 import { AddMediaDialog } from "@/components/add-media-dialog"
 import { Badge } from "@/components/ui/badge"
 import { serialize } from "@/lib/utils"
+import { PrintButton } from "@/components/print-button"
 import { Person } from "@/lib/types"
 
 export default async function PersonPage({ params }: { params: { id: string } }) {
@@ -63,12 +64,15 @@ export default async function PersonPage({ params }: { params: { id: string } })
         </div>
 
         <div className="container mx-auto px-4 pt-12 pb-24 relative z-10">
-          <Link href="/members">
-            <Button variant="ghost" className="mb-10 -ml-2 text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all group">
-              <ChevronLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-              Retour à la galerie
-            </Button>
-          </Link>
+          <div className="flex w-full items-center justify-between mb-10 print:hidden">
+            <Link href="/members">
+              <Button variant="ghost" className="-ml-2 text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all group">
+                <ChevronLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                Retour à la galerie
+              </Button>
+            </Link>
+            <PrintButton />
+          </div>
 
           <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12 text-center lg:text-left">
             {/* Portrait Section */}
