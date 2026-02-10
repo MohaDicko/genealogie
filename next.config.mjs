@@ -21,6 +21,11 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  experimental: {
+    turbo: {
+      // Empty config to acknowledge Turbopack usage but rely on Webpack for PWA
+    }
+  }
 };
 
 export default withPWA(nextConfig);
