@@ -88,7 +88,8 @@ export function AddMediaDialog({ personId, personName }: AddMediaDialogProps) {
                 toast.error(result.error || "Une erreur est survenue")
             }
         } catch (error: any) {
-            console.error(error)
+            // Error handling managed by toast below
+            console.error("Erreur détaillée upload:", error);
             toast.error(error.message || "Erreur inattendue")
         } finally {
             setIsPending(false)

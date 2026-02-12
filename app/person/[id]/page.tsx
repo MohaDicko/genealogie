@@ -16,14 +16,19 @@ import { serialize } from "@/lib/utils"
 import { PrintButton } from "@/components/print-button"
 import { Person } from "@/lib/types"
 
-export default async function PersonPage({ params }: { params: { id: string } }) {
+
+
+export const dynamic = "force-dynamic"
+
+export default async function PersonPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   // Fetch real data with relations - Optimized fetching
   const [allPersonsSummary, person] = await Promise.all([
     prisma.person.findMany({
       select: { id: true, firstName: true, lastName: true, fatherId: true, motherId: true, spouseId: true, gender: true }
     }),
     prisma.person.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         father: true,
         mother: true,

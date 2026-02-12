@@ -125,13 +125,19 @@ export function DashboardCharts({ persons }: DashboardChartsProps) {
                                     dataKey="value"
                                     stroke="none"
                                 >
-                                    {genderData.map((entry, index) => (
-                                        <Cell
-                                            key={`cell-${index}`}
-                                            fill={entry.name === "Femmes" ? "oklch(var(--chart-2))" : "oklch(var(--primary))"}
-                                            fillOpacity={0.8}
-                                        />
-                                    ))}
+                                    {genderData.map((entry, index) => {
+                                        let fillColor = "oklch(var(--chart-5))" // Default / Autres
+                                        if (entry.name === "Hommes") fillColor = "oklch(var(--primary))"
+                                        else if (entry.name === "Femmes") fillColor = "oklch(var(--chart-2))"
+
+                                        return (
+                                            <Cell
+                                                key={`cell-${index}`}
+                                                fill={fillColor}
+                                                fillOpacity={0.8}
+                                            />
+                                        )
+                                    })}
                                 </Pie>
                                 <Tooltip
                                     contentStyle={{
@@ -150,7 +156,7 @@ export function DashboardCharts({ persons }: DashboardChartsProps) {
                                 <div key={index} className="flex items-center gap-2">
                                     <div
                                         className="h-3 w-3 rounded-full"
-                                        style={{ backgroundColor: entry.name === "Femmes" ? "oklch(var(--chart-2))" : "oklch(var(--primary))" }}
+                                        style={{ backgroundColor: entry.name === "Femmes" ? "oklch(var(--chart-2))" : (entry.name === "Hommes" ? "oklch(var(--primary))" : "oklch(var(--chart-5))") }}
                                     />
                                     <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest">{entry.name}</span>
                                 </div>

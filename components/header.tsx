@@ -50,7 +50,7 @@ export function Header() {
           <nav className="hidden lg:flex items-center p-1.5 bg-muted/20 backdrop-blur-xl rounded-[1.75rem] border border-white/10 shadow-inner">
             {navigation.map((item, index) => {
               const Icon = item.icon
-              const isActive = pathname === item.href
+              const isActive = pathname === item.href || (item.href !== "/" && pathname?.startsWith(item.href))
               return (
                 <Link key={item.href} href={item.href} className="relative group/nav">
                   <Button

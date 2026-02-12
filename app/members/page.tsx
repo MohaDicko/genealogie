@@ -1,4 +1,5 @@
 import { Header } from "@/components/header"
+export const dynamic = "force-dynamic"
 import { Button } from "@/components/ui/button"
 import { prisma } from "@/lib/prisma"
 import { Person } from "@/lib/types"

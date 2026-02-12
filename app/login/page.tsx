@@ -153,7 +153,7 @@ export default function LoginPage() {
                                                     <Mail className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground transition-all duration-300 group-focus-within:text-primary group-focus-within:scale-110" />
                                                     <Input
                                                         placeholder="pere.toure@famille.sn"
-                                                        className="h-16 pl-14 pr-6 rounded-2xl border-border/50 bg-background/50 focus:bg-background focus:ring-4 focus:ring-primary/10 transition-all text-lg font-medium shadow-inner"
+                                                        className="relative z-10 h-16 pl-14 pr-6 rounded-2xl border-border/50 bg-background/50 focus:bg-background focus:ring-4 focus:ring-primary/10 transition-all text-lg font-medium shadow-inner"
                                                         {...field}
                                                     />
                                                 </div>
@@ -175,7 +175,7 @@ export default function LoginPage() {
                                                     <Input
                                                         type="password"
                                                         placeholder="••••••••"
-                                                        className="h-16 pl-14 pr-6 rounded-2xl border-border/50 bg-background/50 focus:bg-background focus:ring-4 focus:ring-accent/10 transition-all text-lg font-medium shadow-inner"
+                                                        className="relative z-10 h-16 pl-14 pr-6 rounded-2xl border-border/50 bg-background/50 focus:bg-background focus:ring-4 focus:ring-accent/10 transition-all text-lg font-medium shadow-inner"
                                                         {...field}
                                                     />
                                                 </div>

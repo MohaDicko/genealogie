@@ -1,4 +1,5 @@
 import { FamilyTree } from "@/components/tree/family-tree"
+export const dynamic = "force-dynamic"
 import { Header } from "@/components/header"
 import { prisma } from "@/lib/prisma"
 import { Person } from "@/lib/types"

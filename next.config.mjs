@@ -6,10 +6,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  experimental: {
-    // Empty config to satisfy Vercel/Turbopack if needed
-    turbo: {}
-  }
+
 };
 
 export default nextConfig;

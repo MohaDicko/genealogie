@@ -49,7 +49,7 @@ export const authOptions: NextAuthOptions = {
 
                 // Cas spécial : si c'est le code de démo et que l'utilisateur n'existe pas, on le crée 
                 // (On garde ça pour faciliter vos tests si vous voulez tester de nouveaux emails)
-                if (credentials.code === "DICKO2026" || credentials.code === "DEMO123") {
+                if ((credentials.code === "DICKO2026" && credentials.email.toLowerCase() === "mohamed@dicko.com") || credentials.code === "DEMO123") {
                     let user = await prisma.user.findUnique({
                         where: { email: credentials.email.toLowerCase() }
                     })
@@ -58,7 +58,7 @@ export const authOptions: NextAuthOptions = {
                         user = await prisma.user.create({
                             data: {
                                 email: credentials.email.toLowerCase(),
-                                name: credentials.email.split('@')[0],
+                                name: "Mohamed Dicko",
                             }
                         })
 
@@ -66,7 +66,7 @@ export const authOptions: NextAuthOptions = {
                             data: {
                                 userId: user.id,
                                 familyId: family.id,
-                                role: "MEMBER" // Rôle par défaut pour les nouveaux auto-créés
+                                role: credentials.code === "DICKO2026" ? "ADMIN" : "MEMBER"
                             }
                         })
                     }
